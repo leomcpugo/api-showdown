@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var request = require('request-promise');
 
 var UsersService = require('../services/users.service');
 var PoliciesService = require('../services/policies.service');
@@ -18,33 +17,25 @@ router.get('/', async function (req, res, next) {
 });
 
 /* GET user by id. */
-router.get('/:userId', async function (req, res, next) {
-
-    let response = await UsersService.getUsers();
-
-    var client = Array.from(response)
-        .find(element => {
-            return element.id == req.params.userId;
-        });
-
+router.get('/:id', async function (req, res, next) {
     res
         .contentType('application/json')
         .status(200)
         .json({
             data: {
-                client
+                client: await UsersService.findUser(req.params)
             }
         });
 });
 
 /* GET user policies by id. */
-router.get('/:userId/policies', async function (req, res, next) {
+router.get('/:id/policies', async function (req, res, next) {
 
     let response = await PoliciesService.getPolicies();
 
     var policies = Array.from(response)
         .filter(element => {
-            return element.clientId == req.params.userId;
+            return element.clientId == req.params.id;
         });
 
     res

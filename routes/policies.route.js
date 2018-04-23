@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var request = require('request-promise');
 
 var UsersService = require('../services/users.service');
 var PoliciesService = require('../services/policies.service');
