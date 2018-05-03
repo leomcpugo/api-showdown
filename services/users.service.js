@@ -14,28 +14,24 @@ async function getUserList() {
     return (await request(options)).clients;
 }
 
+// filtered list
 exports.getUsers = async function (filterParameters = null) {
     var userList = await getUserList();
 
+    // filter the list if the filterParameters exists
     if (filterParameters) {
         userList = userList
             .filter(element => {
-                for (var propertyName in filterParameters) {
-                    if (element[propertyName] != filterParameters[propertyName]) {
-                        return false;
-                    }
-                    return true
+                if (filterParameters.hasOwnProperty('name') && element.name != filterParameters.name) {
+                    return false;
                 }
+                if (filterParameters.hasOwnProperty('id') && element.id != filterParameters.id) {
+                    return false;
+                }
+
+                return true;
             });
     }
 
     return userList;
-}
-
-exports.findUser = async function (id) {
-    var userList = await getUserList();
-    return userList
-        .find(element => {
-            return element.id == id;
-        });
 }
